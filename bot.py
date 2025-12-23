@@ -8,7 +8,7 @@ from telegram.ext import (
 )
 
 # ===== CONFIG =====
-BOT_TOKEN = os.getenv("8299837542:AAF7XOeM1YLDN4c_qJXKWeFh2lyQFpzNNnM")   # DO NOT CHANGE
+BOT_TOKEN = os.getenv("BOT_TOKEN")  # DO NOT CHANGE
 ADMIN_ID = 6487827700
 # ==================
 
@@ -48,3 +48,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
