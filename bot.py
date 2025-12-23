@@ -1,26 +1,30 @@
 import os
-from telegram import Bot
-from telegram.ext import Updater, ChatJoinRequestHandler
+from telegram import Update
+from telegram.ext import (
+    ApplicationBuilder,
+    ChatJoinRequestHandler,
+    ContextTypes,
+)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-ADMIN_ID = os.getenv("ADMIN_ID")
 
-def approve_join(update, context):
-    user = update.chat_join_request.from_user
-    update.chat_join_request.approve()
 
-    if ADMIN_ID:
-        context.bot.send_message(
-            chat_id=int(ADMIN_ID),
-            text=f"✅ Approved: {user.first_name} ({user.id})"
-        )
+async def approve_request(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        await update.chat_join_request.approve()
+        print(f"Approved user: {update.chat_join_request.from_user.id}")
+    except Exception as e:
+        print("Error approving user:", e)
 
-updater = Updater(token=BOT_TOKEN, use_context=True)
-dispatcher = updater.dispatcher
 
-dispatcher.add_handler(ChatJoinRequestHandler(approve_join))
+def main():
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
 
-print("🤖 Bot started successfully (v13 polling)")
+    app.add_handler(ChatJoinRequestHandler(approve_request))
 
-updater.start_polling()
-updater.idle()
+    print("🤖 Auto-approve bot started...")
+    app.run_polling()
+
+
+if __name__ == "__main__":
+    main()
